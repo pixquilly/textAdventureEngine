@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>A simple text adventure</title>
+        <link rel="stylesheet" href="./src/css.css" />
+    </head>
+    <body>
+        <header class="header container">
+            <nav hidden class="nav padding-20">
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="#" class="nav-link">home</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">about</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">contact</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">login</a></li>
+                </ul>
+            </nav>
+        </header>
+        <main class="container">
+            <div class="container text-container" onclick="resetTypewriterEffect()"></div>
+            <div class="container option-list">
+                <button class="btn option-btn" onclick="madeChoice(1)"></button>
+                <button class="btn option-btn" onclick="madeChoice(2)"></button>
+                <button class="btn option-btn" onclick="madeChoice(3)"></button>
+                <button class="btn option-btn" onclick="madeChoice(4)"></button>
+                <button class="btn option-btn" onclick="madeChoice(5)"></button>
+                <button class="btn option-btn" onclick="madeChoice(6)"></button>
+                <button class="btn option-btn" onclick="madeChoice(7)"></button>
+            </div>
+        </main>
+        <footer class="footer container row">
+            <h3>Project by <a href="#">@PixQuilly</a></h3>
+        </footer>
+        <script type="text/javascript" src="./src/content.js"></script>
+        <script type="text/javascript" src="./src/js.js"></script>
+    </body>
+</html>
