@@ -3,9 +3,12 @@ try{
     let text = "";
     let choice = null;
     let textContainer = document.querySelector(".text-container");
+    let optionsList = document.querySelector(".option-list");
     let optionsBtns = document.querySelectorAll('.option-btn');
     let nodeIndexElm = document.querySelector("#nodeIndex");
     let nodeIndex = 0;
+    let contextIndex = 0;
+    let pressedButtons = [];
     let typeWriterInterval = null;
 
     let player = {
@@ -25,33 +28,35 @@ try{
         optionsBtns[i].innerHTML = options_values[i].text;
     }
     
-    hideEmptyChoices();
-    typewriter(content.nodes[nodeIndex].text);
+    hideEmptyChoices(); //hides buttons that don't have text value
+    typewriter(content.nodes[nodeIndex].text); //use typewriter effect to write the text
 
+    function madeChoice(choiceNum, button){
 
-    function madeChoice(choiceNum){
+        addToPressed(button); 
 
-        let choice = choiceNum - 1
-        let nodeOptions = content.nodes[nodeIndex].options;
-        let nodeOptionsKeys = Object.keys(nodeOptions);
-        let nodeOptionsValues = Object.values(nodeOptions);
+        let choice = choiceNum - 1;
         
+        let nodeOptionsValues = Object.values(content.nodes[nodeIndex].options);
+
+        //NODE INDEX UPDATES
+        contextIndex = nodeIndex;
         nodeIndex = nodeOptionsValues[choice].goto;
 
         if(nodeOptionsValues[choice].hasOwnProperty("effect")){
             attributeName = nodeOptionsValues[choice].effect.attr;
             attributeValue = nodeOptionsValues[choice].effect.value;
-            player[attributeName] += attributeValue;
+            updateAttribute(attributeName, attributeValue);
         }
 
         updateAttribute();
         clearView();
-        updateText(nodeIndex);
-        updateChoices(nodeIndex);
+        updateText();
+        updateChoices(button);
         hideEmptyChoices();
         nodeIndexElm.innerHTML = nodeIndex;
     }
-    function updateText(nodeIndex){
+    function updateText(){
         let nodeText = content.nodes[nodeIndex].text;
         if(typeWriterInterval){
             clearInterval(typeWriterInterval);
@@ -59,14 +64,34 @@ try{
         typewriter(nodeText);
         textContainer.hidden = false;
     }
-    function updateChoices(){
-        let nodeOptions = content.nodes[nodeIndex].options;
-        let nodeOptionsValues = Object.values(nodeOptions);
-        for(i=0; i<nodeOptionsValues.length; i++){
-            let btn = optionsBtns[i]
-            btn.innerHTML = nodeOptionsValues[i].text;
-            btn.hidden = false;
+    function updateChoices(button){
+        
+        let nodeOptionsValues = Object.values(content.nodes[nodeIndex].options);
+
+        if(nodeIndex != contextIndex){
+            buttonsToHide = [];
+            pressedButtons = [];
         }
+        for(i=0; i<nodeOptionsValues.length; i++){
+
+            let btn = optionsBtns[i];
+            btn.innerHTML = nodeOptionsValues[i].text;
+
+            let isSingleUse = nodeOptionsValues[i].singleUse;
+            let isRecursive = nodeOptionsValues[i].goto==nodeIndex;
+            let isPressed = pressedButtons.includes(btn);
+
+            
+            if(isSingleUse && isRecursive && isPressed){
+                btn.hidden = true;
+            } else {
+                btn.hidden = false; 
+            }
+        }
+    }
+    function addToPressed(button){
+        contextIndex = nodeIndex;
+        pressedButtons.push(button);
     }
     function showChoice(){
         alert(choice);
@@ -102,8 +127,10 @@ try{
         player[attr] = value;
     }
     function typewriter(text){
+
         let charIndex = 0;
-        let tempText = '';
+
+        optionsList.style.display = "none";
 
         typeWriterInterval = setInterval(()=>{
             if(charIndex<text.length){
@@ -116,7 +143,7 @@ try{
                     let subString = '';
                     for(i=charIndex;i<text.length;i++){
                         if(count==2){
-                            charIndex=i;
+                            charIndex=i; 
                             break
                         } else{
                             charIndex = i;
@@ -137,16 +164,24 @@ try{
                     charIndex++;
                 }
 
-            } else{
+            } else {
                 clearInterval(typeWriterInterval);
+                optionsList.style.display = 'flex';
             }
         }, 30);
     }
     function resetTypewriterEffect(){
         if(typeWriterInterval){
             clearInterval(typeWriterInterval);
+            optionsList.style.display = 'flex';
         }
         textContainer.innerHTML = content.nodes[nodeIndex].text;
+    }
+    function setCookie(cookieName, cookieValue, CookieDuration=30){
+    }
+    function getCookie(name) {
+    }
+    function deleteCookie(cookieName){
     }
 }
 catch(error){
