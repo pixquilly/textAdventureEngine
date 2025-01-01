@@ -52,7 +52,7 @@ try{
         updateAttribute();
         clearView();
         updateText();
-        updateChoices(button);
+        updateChoices();
         hideEmptyChoices();
         nodeIndexElm.innerHTML = nodeIndex;
     }
@@ -64,12 +64,11 @@ try{
         typewriter(nodeText);
         textContainer.hidden = false;
     }
-    function updateChoices(button){
+    function updateChoices(){
         
         let nodeOptionsValues = Object.values(content.nodes[nodeIndex].options);
 
         if(nodeIndex != contextIndex){
-            buttonsToHide = [];
             pressedButtons = [];
         }
         for(i=0; i<nodeOptionsValues.length; i++){
@@ -79,8 +78,15 @@ try{
 
             let isSingleUse = nodeOptionsValues[i].singleUse;
             let isRecursive = nodeOptionsValues[i].goto==nodeIndex;
-            let isPressed = pressedButtons.includes(btn);
+            let isPressed = pressedButtons.includes(btn) && isRecursive;
 
+            //debug
+            btn.innerHTML += "  (";
+            if(isSingleUse){btn.innerHTML += "singeUse ";}
+            if(isRecursive){btn.innerHTML += "recursive ";}
+            if(isPressed){btn.innerHTML += "pressed ";}
+            btn.innerHTML += ")";
+            //
             
             if(isSingleUse && isRecursive && isPressed){
                 btn.hidden = true;
@@ -90,6 +96,7 @@ try{
         }
     }
     function addToPressed(button){
+
         contextIndex = nodeIndex;
         pressedButtons.push(button);
     }
@@ -97,6 +104,7 @@ try{
         alert(choice);
     }
     function clearView(){
+
         textContainer.innerHTML = '';
         optionsBtns.forEach((btn)=>{
             btn.innerHTML = '';
@@ -104,6 +112,7 @@ try{
         });
     }
     function hideEmptyChoices(){
+
         optionsBtns.forEach((btn)=>{
             if(btn.innerHTML == ''){
                 btn.hidden = true;
@@ -111,7 +120,9 @@ try{
         });
     }
     function showContinueButton(){
+
         let show = false;
+
         optionsBtns.forEach((btn)=>{
             if(btn.innerHTML==''){
                 show = true;
@@ -119,6 +130,7 @@ try{
                 show = false;
             }
         });
+
         if(show){
             continueBtn.hidden = false;
         }
@@ -135,9 +147,7 @@ try{
         typeWriterInterval = setInterval(()=>{
             if(charIndex<text.length){
                 // if <span> is reached, we keep going until we find </span>
-                // - then we extract the text from between the tags
                 // - then we place the tag in one go
-                // - then we add the text back
                 if(text[charIndex]==="<"){
                     let count = 0;
                     let subString = '';
@@ -166,6 +176,7 @@ try{
 
             } else {
                 clearInterval(typeWriterInterval);
+                appendPeriod(textContainer);
                 optionsList.style.display = 'flex';
             }
         }, 30);
@@ -176,12 +187,22 @@ try{
             optionsList.style.display = 'flex';
         }
         textContainer.innerHTML = content.nodes[nodeIndex].text;
+        appendPeriod(textContainer);
     }
     function setCookie(cookieName, cookieValue, CookieDuration=30){
+
     }
     function getCookie(name) {
+
     }
     function deleteCookie(cookieName){
+
+    }
+    function appendPeriod(textElement){
+        //this function does not work for now.
+        if(".!?".indexOf(textElement.innerHTML[-1]) <= -1){
+            // textElement.innerHTML += ".";
+        };
     }
 }
 catch(error){

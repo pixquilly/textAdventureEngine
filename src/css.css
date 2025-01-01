@@ -6,6 +6,9 @@
 /* *{
     direction: rtl;
 } */
+body{
+    background-color: papayawhip;
+}
 *:first-letter{
     text-transform: capitalize;
 }
@@ -24,6 +27,7 @@ main.container{
     margin: 50px;
 }
 .text-container{
+    font-family: 'text font';
     font-size: 200%;
     cursor: pointer;
 }
@@ -35,9 +39,12 @@ main.container{
 }
 .option-btn{
     border-bottom: 1px solid black;
+    background-color: papayawhip;
+
 }
 .option-btn:hover{
-    background-color: yellow;
+    color: white;
+    background-color: black;
 }
 .hl{
     color: rgb(245, 195, 30);
